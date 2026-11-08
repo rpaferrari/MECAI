@@ -1,0 +1,63 @@
+# ==============================================================================
+# LaTeX / XeLaTeX .gitignore para Dissertações e Teses (ICMC-USP / abnTeX2)
+# ==============================================================================
+
+# Arquivos auxiliares e temporários da compilação
+*.aux
+*.bbl
+*.blg
+*.brf
+*.glo
+*.gls
+*.glg
+*.idx
+*.ilg
+*.ind
+*.ist
+*.log
+*.out
+*.toc
+*.lot
+*.lof
+*.mw
+*.nlo
+*.nls
+*.nlg
+*.fls
+*.fdb_latexmk
+*.synctex
+*.synctex.gz
+*.synctex(busy)
+*.xdv
+*.nav
+*.snm
+*.vrb
+*.run.xml
+*-blx.bib
+
+# Arquivos de cache e pacotes específicos (minted, tikz, etc.)
+_minted*
+*-converted-to.*
+
+# Backups de editores (TeXstudio, VS Code, Emacs, Vim)
+*.bak
+*.sav
+*~
+*.swp
+*.swo
+*.tmp
+
+# Arquivos de configuração de IDEs e do Sistema Operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ==============================================================================
+# PDF Final
+# ==============================================================================
+# Por padrão, deixamos o PDF descomentado caso queira versionar sua dissertação pronta no GitHub.
+# Se preferir NÃO versionar o arquivo PDF gerado, descomente a linha abaixo:
+# *.pdf

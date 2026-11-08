@@ -1,0 +1,757 @@
+\section[Contextualização da Empresa de Adquirência]{Contextualização da Empresa de Adquirência}
+\label{Tecnologias}
+
+Uma empresa de adquirência é o ramo que se responsabiliza pelo gerenciamento e operação de máquinas de transações via cartões (crédito e débito), tendo uma operação muito complexa no que se refere a logística, pois possui atendimento geográfico amplo através de seus CDs e postos avançados que são responsáveis pela distribuição de máquinas para seus clientes.
+
+Este ramo empresarial está em constante crescimento. Segundo o Banco Central Brasileiro, o número de transações realizadas no Brasil em 2011 foi de 3,83 milhões. Em 2020, houve um aumento significativo, atingindo 9,67 milhões de transações. Ao considerarmos os cartões de crédito ativos para os mesmos anos, em 2011 havia 78,4 milhões e em 2020 esse número subiu para 133,7 milhões. Isso indica que quanto mais cartões existem, maior é a quantidade de máquinas que devem estar disponíveis no mercado para realizar pagamentos e transações eletrônicas \cite{TNS}.
+
+Em 2020, os pagamentos feitos utilizando cartões de crédito, débito ou pré-pago foi de R\$ 2 trilhões, informa a Associação Brasileira das Empresas de Cartões de Crédito e Serviços (Abecs). Este valor é equivalente a 27\% do PIB brasileiro \cite{Valenti1998}. Estes números corroboram com o aumento do mercado consumidor e do quanto o mercado de adquirência se torna cada dia mais importante em um mercado que exige agilidade, facilidade e segurança em transações de crédito eletrônico.
+
+No setor de adquirência, o elevado volume de transações confere à logística uma importância estratégica para a economia. Dessa forma, a gestão logística deve ser tratada com rigor, abrangendo não apenas os equipamentos em si, mas também todos os seus componentes críticos, como o \emph{SIM card} e os \emph{microchips} responsáveis pela conexão das máquinas à rede de internet. Em sua pesquisa, \citeonline{Silva2021Adquirencia} demonstra que mesmo ativos de baixo custo, como o \emph{SIM card}, possuem alta criticidade operacional, evidenciando que a complexidade do estudo logístico é essencial para a eficiência do setor.
+
+Hoje em dia, a maioria dos estabelecimentos possuem uma máquina de cartão, desde profissionais autônomos a grandes empresas varejistas e de prestação de serviço. O pagamento por meio eletrônico é uma segurança tanto para o cliente, quanto para o consumidor, pois o cliente não precisa portar consigo dinheiro em espécie e o para o estabelecimento é uma garantia que irá receber corretamente, sem risco de receber dinheiro falso. Portanto, este é o motivo de sua consolidação no mercado.
+
+Os produtos comercializados pela empresa de adquirência são máquinas de transações eletrônicas, que de uma maneira geral compõem a cadeia logística com dois tipos de tecnologia, sendo POS e PINPAD.
+
+A tecnologia de POS é a máquina que usualmente se encontra nos estabelecimentos comuns, como açougue, ambulantes, pequenos e médios varejistas. A tecnologia PINPAD é utilizada nos grandes varejistas e exigem a configuração de um software em um microcomputador (\autoref{fig_pos_pinpad}).
+
+\begin{figure}[htb]
+	\caption{ máquina POS (2) e PINPAD (3)}\label{fig_pos_pinpad}
+	\begin{center}
+            \includegraphics[width=1.04cm]{images/RF_img/POS.png}
+            (2) \hspace{1cm} \includegraphics[width=2cm]{images/RF_img/PINPAD.png}
+            (3)
+	\end{center}
+	\fdadospesquisa
+\end{figure}
+
+\section[Descrição do Problema de Otimização]{Descrição do Problema de Otimização}
+\label{Descrição do Problema}
+O caso em estudo considera a FLP motivada por um problema enfrentado por uma empresa brasileira de adquirência. O foco do estudo está para as facilidades existentes em todo o território brasileiro, levando em consideração apenas a distribuição de máquinas POS.
+
+Uma empresa de adquirência, em geral, adota um modelo logístico integrado para sua distribuição, englobando os processos de \emph{inbound}, \emph{outbound}, armazenagem e distribuição de produtos:
+
+\begin{itemize}
+    \item \emph{Inbound}: A entrada de produtos ocorre com o abastecimento dos CDs pelos fabricantes, que enviam tanto novas máquinas quanto máquinas reparadas, assegurando que estejam em boas condições para uso.
+
+    \item \emph{Outbound}: O fluxo de saída de produtos inclui a movimentação dos CDs para os PAs e, por fim, do PA até o cliente final. Esse fluxo garante que os produtos necessários estejam disponíveis para atender à demanda na ponta da cadeia.
+
+    \item Armazenagem: 
+        \begin{itemize}
+            \item CDs: Em geral, os CDs são estabelecidos em menor quantidade devido ao seu tamanho e capacidade de armazenagem. Eles mantêm uma grande variedade de produtos e são responsáveis por abastecer os PAs, cumprindo a função principal de estoque centralizado na rede logística.
+            \item PAs: Localizados em maior quantidade, os PAs possuem uma área reduzida de armazenamento e servem para manter estoques próximos dos clientes em regiões específicas. Esses pontos permitem uma resposta mais ágil às necessidades dos clientes em áreas com alta ou baixa densidade populacional.
+        \end{itemize}
+
+    \item Distribuição: A distribuição envolve o transporte dos produtos do CD até os PAs e, em seguida, o abastecimento dos clientes finais. Os clientes são o destino final da cadeia, onde as transações financeiras ocorrem e geram receita para a empresa.
+\end{itemize}
+
+Além disso, outros elementos importantes para manter o abastecimento na cadeia logística são:
+
+\begin{itemize}
+    \item Fabricantes: São responsáveis pelo abastecimento dos CDs com novos produtos e máquinas reparadas, garantindo o ciclo contínuo de reposição e manutenção dos equipamentos da rede logística.
+    
+    \item Empresa de descartes: Especializada em descarte de produtos eletrônicos com certificação ISO14001, recebe itens que não podem mais ser reutilizados na cadeia. Produtos com avarias irreparáveis ou cujo remanufatura é inviável financeiramente são enviados para essas empresas, atendendo aos padrões ambientais de descarte.
+\end{itemize}
+
+Uma característica essencial na rede logística de uma empresa de adquirência é que ela opera dentro de uma CSCF, ou seja, os itens enviados ao cliente retornam pelos mesmos canais de distribuição, caracterizando a LR. Assim, o produto é enviado e retorna de forma contínua, não havendo um "fim" para o item, a menos que ele se torne impróprio para reutilização. Nesse fluxo, todo o processo é empurrado, exceto nas etapas realizadas nos PAs, onde a demanda de instalação e desinstalação ocorre de forma puxada.
+
+O envio das máquinas inicia-se com o fabricante. Esse envio ocorre de duas maneiras: a primeira é com a compra por parte da adquirência, geralmente envolvendo negociações por lote e em grande quantidade, momento em que o fabricante envia as máquinas para o CD. A segunda maneira é pela reversão de máquinas quebradas, que precisam de remanufatura especializado, oriundas dos CDs, e, após o remanufatura, são enviadas novamente aos CDs.
+
+Os CDs, por sua vez, são abastecidos pelos fabricantes e pelas máquinas retornadas dos PAs, formando um estoque disponível, que é enviado aos PAs conforme a demanda de pedidos.
+
+Os PAs são a última etapa do processo antes de enviar a máquina para o cliente e a primeira etapa da reversa, após a desinstalação da máquina no cliente. Entretanto, não existe nenhuma ação de manutenção nesses PAs, ou seja, a máquina não passa por remanufaturas nesta etapa. Existem PAs maiores, mas, na grande maioria, são locais que muitas vezes podem ser uma casa residencial que se tornou um PA.
+
+A distribuição no PA ocorre conforme a demanda do cliente. Ou seja, o cliente utiliza uma das plataformas disponíveis para solicitar a instalação, e, então, é criado um número de ordem de serviço, e o PA deve enviar e instalar a máquina dentro de um prazo determinado, conforme a região.
+
+A operação de reversão se inicia no posto avançado, iniciada pelo cliente, que abre uma ordem de serviço para desinstalação, na mesma plataforma de solicitação de instalação. Em seguida, o PA remove a máquina do cliente e a armazena para posterior envio aos CDs.
+
+Tanto o envio quanto o recolhimento das máquinas ocorrem por meio de técnicos aptos a instalar e desinstalar as máquinas, e o transporte utilizado pode ser tanto motocicleta quanto veículos utilitários, conforme a demanda.
+
+O processo de reversa dos PAs para os CDs ocorre por meio de agendas semanais pré-definidas, podendo, em alguns locais, ocorrer o \emph{milk run}, em que um veículo passa por vários PAs recolhendo as máquinas até chegar ao CD.
+
+Ao retornarem ao CD, as máquinas passam pelo processo de recebimento e triagem, que funcionam praticamente como uma única etapa. Na triagem, são realizadas pequenas manutenções, como a troca de tampa de bateria, além de limpeza, garantindo que estejam em condições de atender a um novo cliente. Caso a máquina exija reparos mais complexos, como a substituição da tela de LED, ela é enviada aos fabricantes, que oferecem serviços de remanufatura. Se for determinado que a máquina não pode ser reutilizada, ela retorna ao CD, que a encaminha a uma empresa especializada no descarte de materiais eletrônicos. No entanto, o número de máquinas destinadas ao descarte é muito baixo, o que permite que esse processo seja, na prática, desconsiderado.
+
+O fluxo no CD se inicia pelo recebimento. Se a máquina for oriunda da reversa (postos avançados), ela passa por um processo de triagem. Se a origem for o fabricante, a máquina é enviada para a armazenagem para posterior avanço aos PAs. Após passar pela triagem no CD, se a máquina estiver apta, ela segue para a armazenagem.
+
+No que diz respeito ao controle das movimentações das máquinas, uma equipe de gestão de ativos é responsável por todo o acompanhamento e controle. Cada máquina possui um registro único (código de barras), o que garante sua rastreabilidade ao longo de seu ciclo de vida. As máquinas têm uma vida útil estimada em torno de 5 anos. Para o controle dos estoques, é realizado um inventário oficial anual, além de inventários rotativos ao longo do ano, conforme a necessidade.
+
+O cliente recebe a máquina no modelo de comodato, sem custo inicial, mediante pagamento de um aluguel mensal. Toda essa rede logística é importante para garantir que a máquina esteja disponível no cliente, facilitando a geração de receita tanto para o cliente quanto para a empresa. Além disso, cada transação realizada na máquina está sujeita a uma taxa administrativa cobrada pela adquirente, sendo que o valor a ser repassado ao cliente é sempre descontado do valor do aluguel mensal.
+
+A estrutura de uma companhia de adquirência pode ser melhor observada conforme (\autoref{fig_fluxo_complexo}) e o processo interno do CD (\autoref{fig_fluxo_cd}).
+
+\begin{figure}[htb]
+	\caption{Fluxo logístico (\emph{inbound}, armazenagem, distribuição e \emph{outbound}) de fluxo fechado}\label{fig_fluxo_complexo}
+	\begin{center}
+            \includegraphics[width=10cm]{images/RF_img/FluxoLogisticoCompleto.jpg}
+	\end{center}
+	\fdadospesquisa
+\end{figure}
+
+\begin{figure}[htb]
+	\caption{\label{fig_fluxo_cd} Fluxo de processo no CD}
+	\begin{center}
+            \includegraphics[width=10cm]{images/RF_img/FluxoCD.jpg}
+	\end{center}
+	\fdadospesquisa
+\end{figure}
+
+Uma característica importante a ser considerada é que, devido a restrições fiscais, o fluxo logístico entre CDs, PAs e clientes segue uma estrutura fixa, sem sobreposição. Isso significa que uma máquina enviada de um CD específico, passando por um PA até o cliente, deve retornar pelo mesmo caminho no fluxo reverso, passando pelo mesmo PA e CD de origem. Devido a essa restrição, cada CD atende um grupo fixo de PAs, sem alterações ao longo do tempo. Nas fábricas, embora a regra de não sobreposição também se aplique, uma única fábrica pode atender a todos os CDs, desde que respeite essa configuração de origem e destino.
+
+Seguindo a lógica da não sobreposição, considera-se um problema motivado por uma empresa que conta, por exemplo, com duas fábricas na região de Osasco/SP e três CDs: Araucária/PR (CD Araucária), Jaboatão dos Guararapes/PB (CD Jaboatão) e Guarulhos/SP (CD GRU). Além disso, considere que o CD Araucária atende exclusivamente à região Sul, o CD Jaboatão atende às regiões Norte e Nordeste, e o CD GRU atende às regiões Sudeste e Centro-Oeste. A rede conta com aproximadamente duzentos PAs, distribuídos da seguinte forma: 20\% na região Sul, 30\% nas regiões Norte e Nordeste, e os 50\% restantes nas demais regiões. Os clientes atendidos pelos PAs são segmentados em ZDs sem sobreposição, conforme (\autoref{fig_mapa_brasil_redelog}). Em outras palavras, cada grupo de estabelecimentos forma uma ZD atendida por apenas um PA específico.
+
+\begin{figure}[htb]
+	\caption{Distribuição geográfica do fluxo logístico}\label{fig_mapa_brasil_redelog}
+	\begin{center}
+            \includegraphics[width=10cm]{images/RF_img/MapaCDSEREGIAO.png}
+	\end{center}
+	\fdadospesquisa
+\end{figure}
+
+
+Para atender à demanda, a rede logística mantém um estoque amplo de máquinas, além das unidades já instaladas, em trânsito ou em processos de reparo e remanufatura. Esse estoque garante uma cobertura total de 90 dias. Em outras palavras, mesmo sem reposição, a rede possui capacidade para abastecer seus clientes durante esse período.
+
+\section[Formulação do Modelo PLIM]{Formulação do Modelo PLIM}\label{modeloproposto}
+\label{Modelagem Matemática}
+
+\noindent \textbf{Índices e Parâmetros}
+
+
+%\subsection{Índices e Parâmetros}
+
+$I$ = conjunto de Centros de Distribuição (CDs) indexado por $i$;
+
+$J$ = conjunto de Zonas de Demanda (ZDs) indexado por $j$;
+
+$P$ = conjunto de Postos Avançados (PAs) indexado por $p$;
+
+$L$ = conjunto de Fabricantes indexado por $l$;
+
+$D$ = conjunto de Unidades de Descarte indexado por $d$;
+
+$T$ = conjunto de Períodos de Tempo em meses indexado por $t$.
+
+Parâmetros para o fabricante:
+
+$m^{rf}_{l}$: capacidade de processamento do fabricante l $\in$ L (nº de máquinas);
+
+$m^{af}_{l}$: capacidade de expedição de material no fabricante $\in$ L (nº máquinas);
+
+$e^{f}_{l,t}$: capacidade de estocagem do fabricante l $\in$ L (nº máquinas), por um período t $\in$ T;
+
+$c^{fc}_{l,i}$: parâmetro indicação se o CD i $\in$ I e o fabricante l $\in$ L se localizam na mesma região \{0, 1\};
+
+$d^{fc}_{l,i}$: distância em quilômetros entre o fabricante l $\in$ L e o CD i $\in$ I;
+
+$r^{f}$: Taxa de produtos que precisam de remanufatura pelo fabricante \( l \in L, \), sendo \( 0 \leq rc \leq 1 \).
+
+Parâmetros para os CDs:
+
+$n^{c}$: máxima quantidade de CDs;
+
+$m^{rc}_{i}$: capacidade de recebimento e triagem do CD i $\in$ I (nº de máquinas);
+
+$m^{ac}_{i}$: capacidade de expedição de material do CD i $\in$ I (nº máquinas);
+
+$e^{c}_{i,t}$: capacidade de estocagem do CD i $\in$ I (nº de máquinas) pelo período t $\in$ T;
+
+$c^{cd}_{i,d}$: parâmetro de indicação se o CD i $\in$ I e o descarte d $\in$ D se localizam na mesma região \{0, 1\};
+
+$c^{cp}_{i,p}$: parâmetro indicação se o CD i $\in$ I e o PA p $\in$ P se localizam na mesma região \{0, 1\};
+
+$d^{cd}_{i,d}$: distância em quilômetros entre o CD i $\in$ I e o descarte d $\in$ D;
+
+$d^{cp}_{i,p}$: distância em quilômetros entre o CD i $\in$ I e o PA p $\in$ P;
+
+$r^{c}$: taxa de produtos, bons para reutilização, devolvidos no CD \( i \in I \), sendo \( 0 \leq rc \leq 1 \);
+
+$\theta^{c}$: taxa mínima de retenção de estoque de itens bons nos Centros de Distribuição (CDs), fixada em 65\% conforme diretriz da empresa, utilizada como uma \textit{proxy} operacional para a manutenção de uma política de cobertura de estoque de 90 dias.
+
+Parâmetros para os PAs:
+
+$n^{p}$: máxima quantidade de PAs;
+
+$m^{rp}_{p}$: capacidade de recebimento do PA p $\in$ P (número de maquinetas);
+
+$m^{ap}_{p}$: capacidade de expedição do PA p $\in$ P (nº maquinetas);
+
+$e^{p}_{p,t}$: capacidade de estocagem do PA p $\in$ P (nº de maquinetas) pelo período t $\in$ T;
+
+$c^{pj}_{p,j}$: parâmetro de indicação se o PA p $\in$ P e a ZD j $\in$ J se localizam na mesma região \{0, 1\};
+
+$d^{pj}_{p,j}$: distância em quilômetros entre o PA p $\in$ P e a ZD j $\in$ J;
+
+$\theta^{p}$: taxa mínima de retenção de estoque nos Postos Avançados (PAs), fixada em 50\% conforme diretriz da empresa, utilizada como uma \textit{proxy} de segurança operacional para garantir o abastecimento contínuo das Zonas de Demanda (ZDs).
+
+Parâmetro para as ZDs:
+
+$dem^{rj}_{j,t}$: demanda de máquinas para desinstalação na ZD j $\in$ J;
+
+$dem^{aj}_{j,t}$: demanda de máquinas para instalação na ZD j $\in$ J;
+
+$BM$: parâmetro \emph{Big} M;
+
+Em PLIM, o \textit{Big} M é um artifício matemático usado para vincular uma variável contínua (ex: quantidade de envio) a uma variável binária. A restrição com o \textit{Big} serve para impor a seguinte lógica: não pode haver fluxo de itens (maquinetas) saindo ou chegando a um local que não esteja aberto.
+
+\noindent \textbf{Variáveis de decisão}
+
+%\subsection{Variáveis de decisão}
+
+Variáveis para fábricas:
+
+%$b^{fc}_{l,i}$: indicação se o CD i $\in$ I é atendido pelo fabricante l $\in$ L, sendo \{0, 1\};
+$q^{ac}_{l,i,t}$: quantidade de máquinas enviadas do fabricante l $\in$ L para o CD i $\in$ I no período t $\in$ T;
+
+$q^{fra}_{l,t}$: quantidade de máquinas enviadas do estoque de reversa para o estoque de avanço no fabricante l $\in$ L no período t $\in$ T;
+
+$q^{f}_{l,t}$: quantidade de máquinas novas que entram para compor o estoque de máquinas prontas para uso no fabricante l $\in$ L no período t $\in$ T;
+
+$s^{f}_{l,t}$: quantidade de máquinas que compõe o estoque do fabricante l $\in$ L em um período t $\in$ T;
+
+$s^{frf}_{l,t}$: quantidade de máquinas da reversa que compõe o estoque do fabricante l $\in$ L em um período t $\in$ T;
+
+$s^{fbc}_{l,t}$: quantidade para avanço que compõe o estoque do fabricante l $\in$ L em um período t $\in$ T;
+
+Variáveis para os CDs:
+
+$o^{c}_{i,t}$: indica se o CD i $\in$ I está aberto no período t $\in$ T, sendo \{0, 1\};
+
+$b^{cp}_{i,p,t}$: indicação se o PA p $\in$ P é atendido pelo CD i $\in$ I, sendo \{0, 1\};
+
+$b^{cd}_{i,d,t}$: indicação se o CD i $\in$ I é atendido pelo descarte d $\in$ D no período t $\in$ T, sendo \{0, 1\};
+
+$q^{rf}_{i,l,t}$: quantidade de máquinas enviadas do CD i $\in$ I para o fabricante l $\in$ L no período t $\in$ T;
+
+$q^{ap}_{i,p,t}$: quantidade de máquinas enviadas do CD i $\in$ I para o PA p $\in$ P no período t $\in$ T;
+
+$q^{rd}_{i,t}$: quantidade de máquinas enviadas do CD i $\in$ I para ser descartado, no período t $\in$ T;
+
+$s^{c}_{i,t}$: quantidade de máquinas que compõe o estoque do CD i $\in$ I no período t $\in$ T no período t $\in$ T;
+
+$s^{crf}_{i,t}$: quantidade de máquinas da reversa para envio ao fabricante que compõe o estoque do CD i $\in$ I no período t $\in$ T no período t $\in$ T;
+
+$s^{crd}_{i,t}$: quantidade de máquinas da reversa para envio para descartes que compõe o estoque do CD i $\in$ I no período t $\in$ T no período t $\in$ T;
+
+$s^{cbp}_{i,t}$: quantidade de máquinas para avanço que compõe o estoque do CD i $\in$ I no período t $\in$ T no período t $\in$ T;
+
+$s^{cbt}_{i,t}$: quantidade de máquinas em estoque transitório que compõe o estoque do CD i $\in$ I no período t $\in$ T no período t $\in$ T;
+
+$z_{i,t}$: indica se ocorre a primeira abertura do CD i $\in$ I no período t $\in$ T;
+
+Variáveis para os PAs:
+
+$o^{p}_{p,t}$: indica se o PA p $\in$ P está aberto no período t $\in$ T, sendo \{0, 1\};
+
+$b^{pj}_{p,j,t}$: indicação se a ZD j $\in$ J é atendida pelo PA p $\in$ P no período t $\in$ T, sendo \{0, 1\};
+
+$q^{rc}_{p,i,t}$: quantidade de máquinas enviadas do PA p $\in$ P para o CD i $\in$ I no período t $\in$ T;
+
+$q^{aj}_{p,j,t}$: quantidade de máquinas enviadas do PA p $\in$ P para a ZD j $\in$ J no período t $\in$ T;
+
+$s^{p}_{p,t}$: quantidade de máquinas que compõe o estoque do PA p $\in$ P no período t $\in$ T;
+
+$s^{prc}_{p,t}$: quantidade de máquinas para reversa que compõe o estoque do PA p $\in$ P no período t $\in$ T;
+
+$s^{pbj}_{p,t}$: quantidade de máquinas para avanço que compõe o estoque do PA p $\in$ P no período t $\in$ T;
+
+$w_{i,t}$: indica se ocorre a primeira abertura do PA i $\in$ I no período t $\in$ T;
+
+Variáveis para ZDs:
+
+$q^{rp}_{j,p,t}$: quantidade de máquinas enviadas da ZD j $\in$ J para o PA p $\in$ P no período t $\in$ T;
+
+Custos:
+
+$k$: custo por quilometragem por máquina;
+
+$h_{i}$: custo abertura CD;
+
+$u_{p}$: custo abertura PA;
+
+$v_{i}$: custo de manutenção CD;
+
+$x_{p}$: custo de manutenção PA.
+
+
+\noindent \textbf{Função Objetivo (Minimização de Custos)}
+
+
+%\subsection{Função Objetivo (Minimização de Custos)}
+
+\begin{equation}\label{fo}
+\begin{aligned}
+\min Z = & \sum_{t=1}^{T} \left( \sum_{i=1}^{I} z_{i,t} \cdot h_{i} + \sum_{p=1}^{P} u_{p} \cdot w_{p,t} + \sum_{i=1}^{I} o^{c}_{i,t} \cdot v_{i} + \sum_{p=1}^{P} x_{p} \cdot o^{p}_{p,t} \right.\\
+& + \sum_{l=1}^{L}\sum_{i=1}^{I} q^{ac}_{l,i,t} \cdot d^{fc}_{l,i} \cdot k + \sum_{i=1}^{I}\sum_{l=1}^{L} q^{rf}_{i,l,t} \cdot d^{fc}_{l,i} \cdot k \\
+& + \sum_{i=1}^{I}\sum_{p=1}^{P} q^{ap}_{i,p,t} \cdot d^{cp}_{i,p} \cdot k + \sum_{i=1}^{I}\sum_{l=1}^{L} q^{rc}_{p,i,t} \cdot d^{cp}_{i,p} \cdot k \\
+& + \sum_{i=1}^{I}q^{rd}_{i,t} \cdot d^{cd}_{i,d} \cdot k + \sum_{p=1}^{P}\sum_{j=1}^{J} q^{aj}_{p,j,t} \cdot d^{pj}_{p,j} \cdot k \\
+& \left. + \sum_{j=1}^{J}\sum_{p=1}^{P} q^{rp}_{j,p,t} \cdot d^{pj}_{p,j} \cdot k \right) \quad t \in T
+\end{aligned}
+\end{equation} 
+
+% =================================================================
+% COMPONENTES DA FUNÇÃO OBJETIVO
+% =================================================================
+
+A função objetivo (\ref{fo}) visa minimizar o custo logístico total da rede, sendo estruturada pela soma de três componentes principais. O custo de instalação (\ref{cinst}) contabiliza as despesas fixas incidentes apenas sobre a decisão binária de abertura de novas facilidades (CDs e PAs). O custo de manutenção (\ref{cmanut}) agrega as despesas operacionais recorrentes de cada facilidade mantida ativa durante o horizonte de planejamento. Por fim, o custo de transporte (\ref{ctransp}) quantifica o gasto logístico de movimentação, calculado pelo produto entre o custo unitário por quilômetro, a distância entre os nós e o volume de equipamentos (fluxo) transferidos.
+
+% Custo de Instalação (Instalação Inicial - Abertura)
+\begin{equation}\label{cinst}
+\sum_{t \in T} \left( \sum_{i \in I} z_{i,t} \cdot h_{i} + \sum_{p \in P} w_{p,t} \cdot u_{p} \right)
+\end{equation}
+
+% Custo de Manutenção (Custo Operacional Recorrente)
+\begin{equation}\label{cmanut}
+\sum_{t \in T} \left( \sum_{i \in I} o^{c}_{i,t} \cdot v_{i} + \sum_{p \in P} o^{p}_{p,t} \cdot x_{p} \right)
+\end{equation}
+
+\begin{equation}\label{ctransp}
+\begin{aligned}
+& \sum_{l=1}^{L}\sum_{i=1}^{I} q^{ac}_{l,i,t} \cdot d^{fc}_{l,i} \cdot k + \sum_{i=1}^{I}\sum_{l=1}^{L} q^{rf}_{i,l,t} \cdot d^{fc}_{l,i} \cdot k \\
+& + \sum_{i=1}^{I}\sum_{p=1}^{P} q^{ap}_{i,p,t} \cdot d^{cp}_{i,p} \cdot k + \sum_{i=1}^{I}\sum_{l=1}^{L} q^{rc}_{p,i,t} \cdot d^{cp}_{i,p} \cdot k \\
+& + \sum_{i=1}^{I}q^{rd}_{i,t} \cdot d^{cd}_{i,d} \cdot k + \sum_{p=1}^{P}\sum_{j=1}^{J} q^{aj}_{p,j,t} \cdot d^{pj}_{p,j} \cdot k \\
+& + \sum_{j=1}^{J}\sum_{p=1}^{P} q^{rp}_{j,p,t} \cdot d^{pj}_{p,j} \cdot k
+\end{aligned}
+\end{equation}
+
+\noindent \textbf{Restrições do Modelo}
+
+%\subsection{Restrições do Modelo}
+
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{equation}} % Comando para formatação da numeração se necessário.
+
+% =========================================================
+% RESTRIÇÕES DOS FABRICANTES
+% =========================================================
+Restrições de fábrica:
+
+As restrições (\ref{re1}) garantem que a capacidade máxima de processamento (operações de remanufatura) em cada fabricante, originados do CD, não seja excedida.
+
+\begin{equation}\label{re1}
+\sum_{i=1}^{I} q^{rf}_{i,l,t} \leq m^{rf}_{l} \quad \forall l \in L, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re2} garantem que a capacidade máxima de expedição de itens bons pelo fabricante aos CDs, não seja excedida.
+\begin{equation}\label{re2}
+\sum_{i=1}^{I} q^{ac}_{l,i,t} \leq m^{af}_{l} \quad \forall l \in L, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re3} garantem a composição total de estoque de máquinas no fabricante, estoque de itens para remanufatura e estoque de itens reparados, para envio aos CDs.
+\begin{equation}\label{re3}
+\begin{aligned}
+& s^{f}_{l,t} = s^{fbc}_{l,t} + s^{frf}_{l,t} \quad & \forall l \in L, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re4} garantem o balanceamento do estoque de itens a serem reparados, para conserto, no fabricante, sendo composto pelo recebimento do dos itens enviados pelos CDs, subtraído do envio de itens que foram consertados e enviados para o estoque de itens bons, somado do estoque do período anterior.
+\begin{equation}\label{re4}
+\begin{aligned}
+& \sum_{i=1}^{I} q^{rf}_{i,l,t} - q^{fra}_{l,t} + s^{frf}_{l, t-1} = s^{frf}_{l, t} \quad & \forall l \in L, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re5} garantem o balanceamento do estoque de itens bons envio do fabricante ao CD, sendo composto pela quantidade de itens consertados no próprio fabricante, subtraído pela quantidade de itens enviadas aos CDs, somado da quantidade do estoque do período anterior .
+\begin{equation}\label{re5}
+\begin{aligned}
+& q^{fra}_{l,t} - \sum_{i=1}^{I} q^{ac}_{l,i,t} + q^{f} + s^{fbc}_{l, t-1} = s^{fbc}_{l, t} \quad & \forall l \in L, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re6} garantem que o estoque no fabricante não seja maior que sua capacidade.
+\begin{equation}\label{re6}
+s^{f}_{l,t} \leq e^{f}_{l} \quad \forall l \in L, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref2_5}  para envio ao CD, garantindo que apenas haja envio ao CD, se o mesmo estiver aberto.
+\begin{equation}\label{ref2_5}
+q^{ac}_{l,i,t} \leq BM \cdot o^{c}_{i, t} \quad \forall l \in L, \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+% =========================================================
+% RESTRIÇÕES DOS CDS
+% =========================================================
+
+Restrições dos CDs:
+
+As restrições \ref{re7} garantem que a capacidade máxima de recebimento e triagem no CD não seja excedida pela soma da quantidade de itens enviados do fabricante e dos PAs para os CDs.
+
+\begin{equation}\label{re7}
+\sum_{l=1}^{L} q^{ac}_{l,i,t} + \sum_{p=1}^{P} q^{rc}_{p,i,t} \leq m^{rc}_{i} \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re8} garantem que a capacidade máxima de envio no CD não seja excedida, através da soma das quantidades de máquinas enviadas do CD para os fabricantes, para os PAs e para o descarte.
+\begin{equation}\label{re8}
+\sum_{l=1}^{L} q^{rf}_{i,l,t} + \sum_{p=1}^{P} q^{ap}_{i,p,t} + q^{rd}_{i,t}\leq m^{ac}_{i} \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re9} garantem a composição de estoque total no CD, sendo composta pela somatória de estoque de itens ruins para envio para descarte, de itens para conserto para envio ao fabricante e de itens bons para envio aos PAs.
+\begin{equation}\label{re9}
+\begin{aligned}
+& s^{crd}_{i,t} + s^{crf}_{i,t} + s^{cbp}_{i,t} + s^{cbt}_{i,t} = s^{c}_{i,t} \quad & \forall i \in I, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re9_1} garantem que o estoque de descarte sempre seja menor que o estoque de envio para os reparos nas fábricas.
+\begin{equation}\label{re9_1}
+\begin{aligned}
+& s^{crd}_{i,t} \le s^{crf}_{i,t} \quad & \forall i \in I, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re9_2} garantem que se mantenha um estoque "saudável" para o atendimento dos PAs.
+\begin{equation}\label{re9_2}
+\begin{aligned}
+& s^{crf}_{i,t} + s^{crd}_{i,t} \le \theta^{c} \cdot s^{cbp}_{i,t} \quad & \forall i \in I, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re9_3} garantem o balanceamento de estoque de reversa, para conserto no fabricante, sendo composto pelos itens recebidos dos PAs, subtraído pela quantidade de itens enviados ao fabricante e somado ao estoque no período anterior.
+\begin{equation}\label{re9_3}
+\begin{aligned}
+& \sum_{p=1}^{P} q^{rc}_{p,i,t} \cdot r^{f} - \sum_{l=1}^{L} q^{rf}_{i,l,t} + s^{crf}_{i,t-1} = s^{crf}_{i,t} \quad & \forall i \in I, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re10} garantem o balanceamento de estoque para descarte, sendo composto pelos itens recebidos dos PAs, subtraído pela quantidade de itens enviados ao descarte e somado pelo estoque no período anterior.
+\begin{equation}\label{re10}
+\begin{aligned}
+& \sum_{p=1}^{P} q^{rc}_{p,i,t} \cdot r^{d} - q^{rd}_{i,t} + s^{crd}_{i,t-1} = s^{crd}_{i,t} \quad & \forall i \in I, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re11} garante a composição de estoque temporário nos CDs.
+
+\begin{equation}\label{re11}
+\begin{aligned}
+& s^{cbt}_{i,t} = \left( \sum_{p=1}^{P} q^{rc}_{p,i,t} \right) \cdot r^{c} \quad & \forall i \in I, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re11_1} garantem o balanceamento de estoque bom para envio aos PAs, sendo composto pelos itens recebidos dos PAs e dos fabricantes, subtraído pela quantidade de itens enviados aos PAs e somado pelo estoque no período anterior.
+\begin{equation}\label{re11_1}
+\begin{aligned}
+& s^{cbp}_{i,t-1} - \sum_{p=1}^{P} q^{ap}_{i,p,t} + \sum_{l=1}^{L} q^{ac}_{l,i,t} + s^{cbt}_{i,t-1} = s^{cbp}_{i,t} \quad & \forall i \in I, \quad \forall t \in T \setminus \{0\}
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re12} garantem que o estoque seja menor que a capacidade de armazenamento total no CD.
+\begin{equation}\label{re12}
+\begin{aligned}
+& s^{c}_{i,t} \leq e^{c}_{i, t} \quad & \forall i \in I, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re13} garantem que um PA seja atendido por um CD.
+\begin{equation}\label{re13}
+\sum_{i=1}^{I} b^{cp}_{i,p,t} = 1 \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref13_1} garantem que, se aberto, o CD seja mantido aberto.
+\begin{equation}\label{ref13_1}
+o^{c}_{i,t} \geq o^{c}_{i,t-1} \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref13_2}  para envio ao PA, garantindo que o envio ocorra apenas se o CD estiver aberto.
+\begin{equation}\label{ref13_2}
+q^{rd}_{i,t} \leq BM \cdot o^{c}_{i,t} \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref13_3}  para envio ao descarte, garantindo que o envio ocorra apenas se o CD estiver aberto.
+\begin{equation}\label{ref13_3}
+q^{ap}_{i,p,t} \leq BM \cdot o^{c}_{i,t} \quad \forall i \in I, \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref13_4}  para envio ao fabricante, garantindo que o envio ocorra apenas se o CD estiver aberto.
+\begin{equation}\label{ref13_4}
+q^{rf}_{i,l,t} \leq BM \cdot o^{c}_{i,t} \quad \forall i \in I, \quad \forall l \in L, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref_c013}  para regular o envio ao descarte, assegurando que ele seja realizado consistentemente pelos mesmos CDs ao longo de todo o período.
+\begin{equation}\label{ref_c013}
+q^{rd}_{i,d,t} \leq BM \cdot b^{cd}_{i,d,t} \quad \forall i \in I, \quad \forall d \in D, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref_c014}  para regular o envio aos PAs, garantindo que o envio ocorra para os mesmos PAs ao longo de todo o período.
+\begin{equation}\label{ref_c014}
+q^{ap}_{i,p,t} \leq BM \cdot b^{cp}_{i,p,t} \quad \forall i \in I, \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re15} garantem que se ocorra a primeira abertura do CD, que ele seja mantido aberto.
+\begin{equation}\label{re15}
+z_{i,t} \geq o^{c}_{i,t} - o^{c}_{i,t-1} \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{15_1} garantem a máxima quantidade de abertura de CDs.
+\begin{equation}\label{15_1}
+\sum_{t=1}^{T}\sum_{i=1}^{I} z_{i,t} \leq n^{c}
+\end{equation}
+
+As restrições \ref{15_2} garantem a abertura e atendimento em uma determinada região que possua PA.
+\begin{equation}\label{15_2}
+b^{cp}_{i,p,t} \leq c^{cp}_{i,p} \cdot o^{c}_{i, t} \quad \forall i \in I, \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{15_3} garantem que um PA seja atendido pelo mesmo CD durante todo o horizonte de planejamento.
+\begin{equation}\label{15_3}
+b^{cp}_{i,p,t} \geq b^{cp}_{i,p,t-1} \quad \forall i \in I, \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+% =========================================================
+% RESTRIÇÕES DOS PAS
+% =========================================================
+
+Restrições dos PAs:
+
+As restrições \ref{re16} garantem que a capacidade máxima de recebimento das ZDs e dos CDs, não seja excedidas no PA.
+\begin{equation} \label{re16}
+\sum_{j=1}^{J} q^{rp}_{j,p,t} + \sum_{i=1}^{I} q^{ap} _{i,p,t} \leq m^{rp} \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re17} garantem que a capacidade máxima de envio no PA para os CDs e as ZDs, não seja excedida.
+\begin{equation}\label{re17}
+\sum_{j=1}^{J} q^{aj}_{p,j,t} + \sum_{i=1}^{I} q^{rc}_{p,i,t} \leq m^{ep} \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re18} garantem a composição de estoque total no PA, pela soma de estoque bom para envio as ZDs e estoque ruim para envio ao CD.
+\begin{equation}\label{re18}
+s^{pbj}_{p,t} + s^{prc}_{p,t} = s^{p}_{p,t} \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re19} garantem o balanceamento de estoque para envio ao CD (reversa), sendo composto pelos itens enviados pela ZD, subtraído pelos itens enviados ao CD, somado ao estoque do período anterior.
+\begin{equation}\label{re19}
+\begin{aligned}
+& \sum_{j=1}^{J} q^{rp}_{j,p,t} - \sum_{i=1}^{I} q^{rc}_{p,i,t} + s^{prc}_{p, t-1} = s^{prc}_{p, t}
+\quad & \forall p \in P, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re19_1} garantem que em todo o período exista um estoque "saudável" para o abastecimento das ZDs.
+\begin{equation}\label{re19_1}
+\begin{aligned}
+& s^{pbj}_{p,t} \geq 0.5 \cdot s^{pbj}_{p,0} \quad & \forall p \in P, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re20} garantem o balanceamento de estoque para envio as ZDs (avanço), sendo composto pelos itens enviados pelo CD, subtraído pelos itens enviados as ZDs, somado ao estoque do período anterior.
+
+\begin{equation}\label{re20}
+\begin{aligned}
+& \sum_{i=1}^{I} q^{ap}_{i,p,t} - \sum_{j=1}^{J} q^{aj}_{p,j,t} + s^{pbj}_{p, t-1} = s^{pbj}_{p, t} \quad & \forall p \in P, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{ref20_1} garantem que o estoque não exceda o limite máximo de sua capacidade no PA.
+\begin{equation}\label{ref20_1}
+s^{p}_{p,t} \leq e^{p}_{p, t} \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{ref20_2} garantem o atendimento total da demanda de reversa de uma ZD no PA.
+\begin{equation}\label{ref20_2}
+\sum_{p=1}^{P} q^{rp}_{j,p,t} = dem^{rj}_{j, t} \quad \forall j \in J, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re21} garantem o atendimento total da demanda de avanço de uma ZD no PA.
+\begin{equation}\label{re21}
+\sum_{p=1}^{P} q^{aj}_{p,j,t} = dem^{aj}_{j, t} \quad \forall j \in J, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re23} garantem a manutenção da abertura do PA após sua abertura.
+\begin{equation}\label{re23}
+o^{p}_{p,t} \geq o^{p}_{p, t-1} \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re22} garantem que o atendimento do PA a uma ZD ocorra quando ambas estiverem em uma mesma região.
+\begin{equation}\label{re22}
+\begin{aligned}
+& b^{pj}_{p,j,t} \leq c^{pj}_{p,j} \cdot o^{p}_{p,t}
+\quad & \forall p \in P, \quad \forall j \in J, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re24} garantem a primeira abertura de um PA e sua manutenção.
+\begin{equation}\label{re24}
+w^{p}_{p,t} \geq o^{p}_{p,t} - o^{p}_{p,t-1} \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re25} garantem a máxima quantidade de abertura no PA.
+\begin{equation}\label{re25}
+\sum_{t=1}^{T} w^{p}_{p, t} \leq n^{p} \quad \forall p \in P
+\end{equation}
+
+As restrições \ref{re25_1} garantem que uma ZD seja atendida por um PA.
+\begin{equation}\label{re25_1}
+\sum_{p=1}^{P} b^{pj}_{p,j,t} = 1 \quad \forall j \in J, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re25_2} garantem que a quantidade reversa de máquinas saindo da ZD seja enviada para o PA apenas se este posto estiver aberto no período em questão.
+\begin{equation}\label{re25_2}
+q^{rp}_{j,p,t} \leq BM \cdot o^{p}_{p,t} \quad \forall j \in J, \quad \forall p \in P, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re25_3} garantem que a quantidade de máquinas (fluxo direto) do PA seja enviada para a ZD apenas se este posto estiver aberto no período em questão.
+\begin{equation}\label{re25_3}
+q^{aj}_{p,j,t} \leq BM \cdot o^{p}_{p,t} \quad \forall p \in P, \quad \forall j \in J, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re25_4} garantem que a reversão de máquinas do PA para o CD seja realizada apenas se o PA estiver aberto no período em questão.
+\begin{equation}\label{re25_4}
+q^{rc}_{p,i,t} \leq BM \cdot o^{p}_{p,t} \quad \forall p \in P, \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re25_12} asseguram que cada ZD envie maquinas para um único PA e que essa alocação permaneça inalterada ao longo de todo o período considerado.
+\begin{equation}\label{re25_12}
+q^{rp}_{j,p,t} \leq BM \cdot b^{pj}_{p,j,t} \quad \forall p \in P, \quad \forall j \in J, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re25_13} asseguram que cada ZD receba maquinas de um único PA e que essa alocação permaneça inalterada ao longo de todo o período considerado.
+\begin{equation}\label{re25_13}
+q^{aj}_{p,j,t} \leq BM \cdot b^{pj}_{p,j,t} \quad \forall p \in P, \quad \forall j \in J, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re25_14} asseguram que cada PA envie maquinas para um único CD e que essa alocação permaneça inalterada ao longo de todo o período considerado.
+\begin{equation}\label{re25_14}
+q^{rc}_{p,i,t} \leq BM \cdot b^{cp}_{i,p,t} \quad \forall p \in P, \quad \forall i \in I, \quad \forall t \in T
+\end{equation}
+
+As restrições \ref{re26} garantem que uma ZD seja atendido pelo mesmo PA durante todo o horizonte de planejamento.
+\begin{equation}\label{re26}
+b^{pj}_{p,j,t} \geq b^{pj}_{p,j,t-1} \quad \forall p \in P, \quad \forall j \in J, \quad \forall t \in T
+\end{equation}
+% =================================================================
+% RESTRIÇÕES DE DOMÍNIO E NÃO NEGATIVIDADE
+% =================================================================
+
+As restrições \ref{re28} garantem que os coeficientes de indicação de região sejam binários.
+\begin{equation}\label{re28}
+\begin{aligned}
+& b^{cp}_{i,p,t} \in \{0,1\} \quad & \forall i \in I, \quad \forall p \in P, \quad \forall t \in T \\
+& b^{cd}_{i,d,t} \in \{0,1\} \quad & \forall i \in I, \quad \forall d \in D, \quad \forall t \in T \\
+& b^{pj}_{p,j,t} \in \{0,1\} \quad & \forall p \in P, \quad \forall j \in J, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re29} garantem que as variáveis de fluxo entre as facilidades não sejam negativas.
+\begin{equation}\label{re29}
+\begin{aligned}
+& q^{ac}_{l,i,t}, q^{fra}_{l,t}, q^{rf}_{i,l,t} \geq 0 \quad & \forall l \in L, \quad \forall i \in I, \quad \forall t \in T \\
+& q^{ap}_{i,p,t}, q^{rd}_{i,t}, q^{rc}_{p,i,t} \geq 0 \quad & \forall i \in I, \quad \forall p \in P, \quad \forall t \in T \\
+& q^{aj}_{p,j,t}, q^{rp}_{j,p,t} \geq 0 \quad & \forall p \in P, \quad \forall j \in J, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re30} garantem que as variáveis de estoque entre as facilidades não sejam negativas.
+\begin{equation}\label{re30}
+\begin{aligned}
+& s^{f}_{l,t}, s^{frf}_{l,t}, s^{fbc}_{l,t} \geq 0 \quad & \forall l \in L, \quad \forall t \in T \\
+& s^{c}_{i,t}, s^{crf}_{i,t}, s^{crd}_{i,t}, s^{cbp}_{i,t}, s^{cbt}_{i,t} \geq 0 \quad & \forall i \in I, \quad \forall t \in T \\
+& s^{p}_{p,t}, s^{prc}_{p,t}, s^{pbj}_{p,t} \geq 0 \quad & \forall p \in P, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+As restrições \ref{re31} garantem que as variáveis de abertura das facilidades sejam binárias.
+\begin{equation}\label{re31}
+\begin{aligned}
+& o^{c}_{i,t} \in \{0,1\} \quad & \forall i \in I, \quad \forall t \in T \\
+& o^{p}_{p,t} \in \{0,1\} \quad & \forall p \in P, \quad \forall t \in T
+\end{aligned}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%INCLUSÃO DOS SÍMBOLOS%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% =========================================================
+% CONJUNTOS DE INDICES
+% =========================================================
+\simbolo{I}{Conjunto de índices para CDs}
+\simbolo{J}{Conjunto de índices para ZDs}
+\simbolo{P}{Conjunto de índices para PAs}
+\simbolo{L}{Conjunto de índices para Fabricantes}
+\simbolo{D}{Conjunto de índices para Pontos de Descarte}
+\simbolo{T}{Conjunto de índices para o período de tempo (meses)}
+
+% =========================================================
+% PARÂMETROS
+% =========================================================
+\simbolo{m^{rf}_{l}}{Capacidade máxima de processamento (remanufatura) do fabricante}
+\simbolo{m^{af}_{l}}{Capacidade máxima de expedição de material (avanço) do fabricante}
+\simbolo{e^{f}_{l,t}}{Capacidade máxima de estocagem no fabricante e período}
+\simbolo{c^{fc}_{l,i}}{Parâmetro binário de mesma região entre fabricante e CD}
+\simbolo{d^{fc}_{l,i}}{Distância em quilômetros entre fabricante e CD}
+\simbolo{r^{f}}{Taxa de produtos que precisam de remanufatura pelo fabricante}
+\simbolo{n^{c}}{Máxima quantidade de CDs}
+\simbolo{m^{rc}_{i}}{Capacidade máxima de recebimento e triagem do CD}
+\simbolo{m^{ac}_{i}}{Capacidade máxima de expedição de material (avanço/reversa) do CD}
+\simbolo{e^{c}_{i,t}}{Capacidade máxima de estocagem no CD e período}
+\simbolo{c^{cd}_{i,d}}{Parâmetro binário de mesma região entre CD e ponto de descarte}
+\simbolo{c^{cp}_{i,p}}{Parâmetro binário de mesma região entre CD e PA}
+\simbolo{d^{cd}_{i,d}}{Distância em quilômetros entre CD e ponto de descarte}
+\simbolo{d^{cp}_{i,p}}{Distância em quilômetros entre CD e PA}
+\simbolo{r^{c}}{Taxa de produtos bons para reutilização devolvidos no CD}
+\simbolo{n^{p}}{Máxima quantidade de Postos Avançados (PAs)}
+\simbolo{m^{rp}_{p}}{Capacidade máxima de recebimento no PA}
+\simbolo{m^{ap}_{p}}{Capacidade máxima de expedição no PA}
+\simbolo{e^{p}_{p,t}}{Capacidade máxima de estocagem no PA e período}
+\simbolo{c^{pj}_{p,j}}{Parâmetro binário de mesma região entre PA e ZD}
+\simbolo{d^{pj}_{p,j}}{Distância em quilômetros entre PA e ZD}
+\simbolo{dem^{rj}_{j,t}}{Demanda de máquinas para desinstalação (reversa) na ZD e período}
+\simbolo{dem^{aj}_{j,t}}{Demanda de máquinas para instalação (avanço) na ZD e período}
+\simbolo{BM}{Parâmetro Big M (número grande)}
+\simbolo{k}{Custo por quilometragem por máquina (transporte)}
+\simbolo{h_{i}}{Custo de abertura (instalação) do CD}
+\simbolo{u_{p}}{Custo de abertura (instalação) do PA}
+\simbolo{v_{i}}{Custo de manutenção (operacional) do CD}
+\simbolo{x_{p}}{Custo de manutenção (operacional) do PA}
+
+% =========================================================
+% VARIÁVEIS DE DECISÃO
+% =========================================================
+\simbolo{q^{ac}_{l,i,t}}{Quantidade de máquinas enviadas do fabricante para o CD (Avanço CD)}
+\simbolo{q^{fra}_{l,t}}{Quantidade de máquinas reparadas enviadas do estoque de reversa para o estoque de avanço no fabricante}
+\simbolo{q^{f}_{l,t}}{Quantidade de máquinas novas que entram no estoque do fabricante}
+\simbolo{s^{f}_{l,t}}{Estoque total de máquinas no fabricante}
+\simbolo{s^{frf}_{l,t}}{Estoque de máquinas para remanufatura (reversa) no fabricante}
+\simbolo{s^{fbc}_{l,t}}{Estoque de máquinas boas (avanço) no fabricante}
+\simbolo{o^{c}_{i,t}}{Variável binária: 1 se o CD está operacional no período}
+\simbolo{b^{cp}_{i,p,t}}{Variável binária: 1 se o PA é atendido pelo CD (Alocação CD-PA)}
+\simbolo{b^{cd}_{i,d,t}}{Variável binária: 1 se o CD é atendido pelo ponto de descarte}
+\simbolo{q^{rf}_{i,l,t}}{Quantidade de máquinas enviadas do CD para o fabricante (Reversa Fabricante)}
+\simbolo{q^{ap}_{i,p,t}}{Quantidade de máquinas enviadas do CD para o PA (Avanço PA)}
+\simbolo{q^{rd}_{i,t}}{Quantidade de máquinas enviadas do CD para descarte (Reversa Descarte)}
+\simbolo{s^{c}_{i,t}}{Estoque total de máquinas no CD}
+\simbolo{s^{crf}_{i,t}}{Estoque de máquinas para envio ao fabricante no CD}
+\simbolo{s^{crd}_{i,t}}{Estoque de máquinas para envio para descartes no CD}
+\simbolo{s^{cbp}_{i,t}}{Estoque de máquinas para avanço (boas) no CD}
+\simbolo{s^{cbt}_{i,t}}{Estoque de máquinas em trânsito/temporário no CD}
+\simbolo{z_{i,t}}{Variável binária: 1 se ocorre a primeira abertura do CD (Custo Fixo CD)}
+\simbolo{o^{p}_{p,t}}{Variável binária: 1 se o PA está operacional no período}
+\simbolo{b^{pj}_{p,j,t}}{Variável binária: 1 se a ZD é atendida pelo PA (Alocação PA-ZD)}
+\simbolo{q^{rc}_{p,i,t}}{Quantidade de máquinas enviadas do PA para o CD (Reversa CD)}
+\simbolo{q^{aj}_{p,j,t}}{Quantidade de máquinas enviadas do PA para a ZD (Avanço ZD)}
+\simbolo{s^{p}_{p,t}}{Estoque total de máquinas no PA}
+\simbolo{s^{prc}_{p,t}}{Estoque de máquinas para reversa (prontas para CD) no PA}
+\simbolo{s^{pbj}_{p,t}}{Estoque de máquinas para avanço (boas) no PA}
+\simbolo{w_{p,t}}{Variável binária: 1 se ocorre a primeira abertura do PA (Custo Fixo PA)}
+\simbolo{q^{rp}_{j,p,t}}{Quantidade de máquinas enviadas da ZD para o PA (Reversa PA)}
+
+%\documentclass{report}
+
+%\usepackage{lipsum}  
+
+%\begin{document}
+
+%\chapter{Introduction}
+
+
+%\end{document}
+
+%\begin{ganttchart}[ 
+%vgrid, 
+%hgrid, 
+%bar/.append style={fill=red!50}, 
+%group/.append style={draw=black, fill=green!50},
+%milestone/.append style={fill=orange, rounded corners=3pt} ]{1}{12} 
+%\gantttitle{Title}{12} \\
+%\ganttgroup{Group 1}{1}{10} \\
+%\ganttbar{Task 1}{1}{3} \\
+%\ganttbar[ bar/.append style={shape=ellipse, fill=yellow, dashed} ]{Task 2}{4}{10} \\
+%\ganttmilestone{Milestone 1}{11}
+%\end{ganttchart}
