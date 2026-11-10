@@ -1,0 +1,182 @@
+\documentclass[preprint,12pt,authoryear]{elsarticle}
+
+%% Pacotes essenciais
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{lipsum}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\journal{Journal of Cleaner Production}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Título do Artigo
+\title{Optimizing a Closed-Loop Supply Chain for Electronic Payment Terminals: A Mixed-Integer Linear Programming Approach under Strict Service Level Agreements}
+
+%% Autores e Filiações
+\author[icmc]{Rafael P. A. Ferrari\corref{cor1}}
+\ead{rpaferrari@usp.br}
+
+\author[icmc]{Maristela O. Santos}
+\ead{mari@icmc.usp.br}
+
+\author[ufscar]{Eli Angela V. Toso}
+\ead{eli@dep.ufscar.br}
+
+\cortext[cor1]{Corresponding author}
+\affiliation[icmc]{organization={Instituto de Ci\^encias Matem\'aticas e de Computa\c{c}\~ao, Universidade de S\~ao Paulo (ICMC-USP)},
+            addressline={Av. Trabalhador S\~ao-carlense, 400}, 
+            city={S\~ao Carlos},
+            state={SP},
+            postcode={13566-590},
+            country={Brazil}}
+
+\affiliation[ufscar]{organization={Departamento de Engenharia de Produ\c{c}\~ao, Universidade Federal de S\~ao Carlos (DEP-UFSCar)},
+            addressline={Rodovia Washington Lu\'is, km 235}, 
+            city={S\~ao Carlos},
+            state={SP},
+            postcode={13565-905},
+            country={Brazil}}
+
+%% Abstract
+\begin{abstract}
+The explosive growth of electronic transactions has driven a massive expansion in the deployment of Point of Sale (POS) terminals across retail sectors. In this competitive landscape, acquirers are subject to strict Service Level Agreements (SLAs) that mandate the repair or replacement of defective devices within 24 hours to prevent immediate revenue loss and penalties. Consequently, managing the end-of-use and reverse flow of these electronic devices poses severe operational and environmental challenges. This paper proposes a Mixed-Integer Linear Programming (MILP) model to optimize a multi-echelon Closed-Loop Supply Chain (CLSC) dedicated to POS acquiring networks under circular economy principles. The network integrates terminal manufacturers, central distribution centers (CDs), decentralized forward stations (PAs), customer demand zones (ZDs), and certified disposal facilities. The objective function minimizes total operating costs---including facility installation and maintenance, direct and reverse multi-echelon transportation, and inventory carrying costs---while satisfying stringent capacity bounds and immediate SLA replacement requirements. The model was validated using empirical instances derived from the state of S\~ao Paulo, Brazil, and solved via the Gurobi Optimizer. Computational results demonstrate that strategically positioning decentralized forward stations significantly curtails response times and emissions while enabling high terminal remanufacturing and recovery rates, thereby reducing electronic waste (WEEE) and avoiding premature landfill disposal.
+\end{abstract}
+
+%% Graphical Abstract
+%\begin{graphicalabstract}
+%\includegraphics{figures/graphical_abstract.pdf}
+%\end{graphicalabstract}
+
+%% Highlights (3 a 5 tópicos, máx 85 caracteres cada)
+\begin{highlights}
+\item Closed-loop supply chain model for electronic payment (POS) terminals under strict SLAs
+\item Formulated as a multi-echelon mixed-integer linear programming (MILP) model
+\item Captures reverse logistics, remanufacturing loops, and certified WEEE disposal
+\item Real-world empirical case study based on the state of S\~ao Paulo, Brazil
+\item Balances logistical cost efficiency with circular economy and resource recovery
+\end{highlights}
+
+%% Palavras-chave
+\begin{keyword}
+Closed-Loop Supply Chain \sep Reverse Logistics \sep Facility Location \sep Mixed-Integer Linear Programming \sep Electronic Waste (WEEE) \sep Circular Economy
+\end{keyword}
+
+\end{frontmatter}
+
+%% ==============================================================================
+%% SECTION 1: INTRODUCTION
+%% ==============================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Facility Location Problems (FLPs) represent strategic planning decisions of paramount importance for contemporary organizations. An appropriately dimensioned logistics network enables agile service delivery at minimized operating costs, fostering sustainable competitive advantage, given that transportation and warehousing expenditures typically constitute substantial shares of global corporate budgets \citep{Owen1998Strategic}. As emphasized by \citet{oliveira2012sistema}, location problems fundamentally address the optimal spatial deployment of an organization's resources to satisfy established criteria across geographically dispersed demand points, adhering to operational, geographical, budgetary, and temporal restrictions.
+
+The structural complexity of these logistics networks varies considerably across industries. While certain configurations operate under simplified schemes featuring a single centralized distribution center \citep{SINGH2018343}, more advanced supply chains integrate multiple echelons comprising manufacturers, regional hubs, and local forward stations. Furthermore, such networks can be architected either as open-loop systems (where goods flow unidirectionally from suppliers to end-consumers) or as Closed-Loop Supply Chains (CLSCs), where forward and reverse logistics flows coexist, enabling the systematic recovery of used or defective products for remanufacturing, reuse, or certified recycling \citep{AMIN2017316}.
+
+In the context of the global transition toward digital economies, the electronic payment sector has experienced unprecedented exponential growth. In Brazil, the total volume of electronic transactions increased from 3.83 million in 2011 to 9.67 million in 2020, accompanied by a sharp surge in active credit cards, which expanded from 78.4 million to 133.7 million over the same period \citep{TNS}. According to the Brazilian Association of Credit Card and Service Companies (Abecs), financial transactions processed via credit, debit, and prepaid cards surpassed R\$ 2 trillion in 2020, representing approximately 27\% of Brazil's Gross Domestic Product (GDP) \citep{Valenti1998}. Sustaining this high-velocity payment ecosystem relies entirely upon a massive installed base of mobile electronic Point of Sale (POS) terminals, deployed across millions of retail establishments, spanning independent micro-merchants to major nationwide retail chains.
+
+However, the logistical operations of card acquiring companies are subject to uniquely stringent operational constraints. Transaction capturing at merchant endpoints is governed by rigorous Service Level Agreements (SLAs). In the acquiring market, unexpected equipment downtime, battery degradation, mechanical reader failures, or connectivity disruptions (e.g., in internal telemetry components and SIM cards) demand the prompt replacement or on-site repair of defective POS terminals, typically within a strict 24-hour window \citep{Silva2021Adquirencia}. Failing to comply with this SLA induces severe financial contractual penalties, merchant dissatisfaction, and immediate transactional interruption, causing direct revenue losses. Consequently, acquirers cannot rely exclusively on distant, centralized warehouses; they require a highly decentralized network featuring regional Forward Stations (known as \emph{Postos Avan\c{c}ados} -- PAs) positioned close to Customer Demand Zones (ZDs).
+
+Concurrently with this operational demand for responsiveness, a pressing environmental concern has emerged regarding Waste Electrical and Electronic Equipment (WEEE / e-waste). The sustained expansion of electronic hardware consumption has generated historical peaks in equipment sales in recent years \citep{Santos2014a}. The improper or premature landfill disposal of obsolete terminals creates severe ecological hazards due to hazardous heavy metals, non-biodegradable polymers, and complex circuitry. In developing economies such as Brazil, deploying effective reverse logistics infrastructure for electronic scrap still faces notable institutional and operational hurdles compared to developed nations \citep{demajorovic2016logistica}. Reverse logistics constitutes the backbone of a Circular Economy framework \citep{guarnieri2011logistica}, ensuring that recovered POS terminals are reintegrated into value-creating loops through specialized remanufacturing or, when physical wear renders repairs economically unviable, routed to environmentally certified recycling facilities adhering to ISO 14001 standards \citep{mogalelogirever}.
+
+Although the Operations Research and Industrial Engineering literature offers various CLSC optimization models \citep{SINGH2018343,AMIN2017316}, a noticeable research gap persists regarding the simultaneous consideration of: (i) multi-echelon networks integrating decentralized forward stations designed to guarantee strict 24-hour SLAs; (ii) continuous closed-loop remanufacturing flows for electronic payment devices restored to like-new operational condition; and (iii) empirical cost structures evaluated under real-world geographic complexities in major developing market economies.
+
+To bridge this literature gap, this study develops a Mixed-Integer Linear Programming (MILP) model designed to optimize the configuration and annual operational planning of a closed-loop supply chain in the payment acquiring industry. The proposed mathematical model simultaneously determines:
+\begin{enumerate}[(i)]
+    \item The optimal quantity and geographic locations of strategic logistics facilities (Distribution Centers -- CDs and decentralized Forward Stations -- PAs);
+    \item Multi-echelon transportation and allocation policies for new, remanufactured, and scrap terminals across all network nodes (Manufacturers, CDs, PAs, Demand Zones, and Certified Disposal Units);
+    \item The balance between fulfilling stringent, time-critical service commitments and minimizing the environmental footprint of discarded electronic waste.
+\end{enumerate}
+
+The model was computationally implemented and solved to optimality using the Gurobi Optimizer, leveraging empirical instances derived from the state of S\~ao Paulo, the primary economic and financial hub of Latin America.
+
+The remainder of this article is structured as follows: Section \ref{sec:lit_review} synthesizes pertinent literature on closed-loop supply chains, WEEE reverse logistics, and facility location optimization. Section \ref{sec:problem_formulation} outlines the physical supply network, core operational assumptions, and the formal MILP mathematical formulation. Section \ref{sec:computational_study} details the S\~ao Paulo empirical study, test instances, and computational findings. Section \ref{sec:discussion} discusses managerial implications, policy recommendations, and environmental benefits regarding e-waste diversion. Finally, Section \ref{sec:conclusions} presents concluding remarks and outlines avenues for future research.
+
+%% ==============================================================================
+%% SEÇÃO 2: REVISÃO DA LITERATURA (~1.400 palavras)
+%% ==============================================================================
+\section{Literature Review}
+\label{sec:lit_review}
+\subsection{Closed-Loop Supply Chains and E-Waste Management}
+\lipsum[19-28]
+
+\subsection{Facility Location and Reverse Logistics under SLAs}
+\lipsum[29-38]
+
+%% ==============================================================================
+%% SEÇÃO 3: DESCRIÇÃO DO PROBLEMA E FORMULAÇÃO MATEMÁTICA (~1.900 palavras)
+%% ==============================================================================
+\section{Problem Description and Mathematical Formulation}
+\label{sec:problem_formulation}
+\subsection{System Description and Assumptions}
+\lipsum[39-48]
+
+\subsection{Mathematical Model (MILP)}
+\lipsum[49-58]
+
+\begin{equation}
+\min Z = \sum_{i \in I} f_i Y_i + \sum_{i \in I} \sum_{j \in J} c_{ij} X_{ij} + \sum_{j \in J} \sum_{k \in K} d_{jk} W_{jk}
+\label{eq:objective_sample}
+\end{equation}
+
+\lipsum[59-65]
+
+%% ==============================================================================
+%% SEÇÃO 4: ESTUDO DE CASO E RESULTADOS COMPUTACIONAIS (~1.900 palavras)
+%% ==============================================================================
+\section{Computational Study and Empirical Application}
+\label{sec:computational_study}
+\subsection{Case Study: S\~ao Paulo Acquiring Network}
+\lipsum[66-78]
+
+\subsection{Computational Performance and Gap Analysis}
+\lipsum[79-92]
+
+%% ==============================================================================
+%% SEÇÃO 5: DISCUSSÃO E IMPLICAÇÕES GERENCIAIS/AMBIENTAIS (~1.050 palavras)
+%% ==============================================================================
+\section{Managerial Insights and Environmental Implications}
+\label{sec:discussion}
+\subsection{Circular Economy and WEEE Abatement}
+\lipsum[93-99]
+
+\subsection{Managerial Guidelines for Fintechs and Acquirers}
+\lipsum[100-107]
+
+%% ==============================================================================
+%% SEÇÃO 6: CONCLUSÕES (~500 palavras)
+%% ==============================================================================
+\section{Conclusions and Future Research}
+\label{sec:conclusions}
+\lipsum[108-115]
+
+
+%% ==============================================================================
+%% DECLARAÇÕES OBRIGATÓRIAS ELSEVIER
+%% ==============================================================================
+\section*{CRediT Authorship Contribution Statement}
+\textbf{Rafael P. A. Ferrari:} Conceptualization, Methodology, Software, Formal analysis, Investigation, Data Curation, Writing - Original Draft, Visualization. 
+\textbf{Maristela O. Santos:} Conceptualization, Supervision, Writing - Review \& Editing, Project administration. 
+\textbf{Eli Angela V. Toso:} Conceptualization, Supervision, Methodology, Writing - Review \& Editing.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Declaration of Generative AI and AI-assisted Technologies in the Writing Process}
+During the preparation of this work, the authors used AI-assisted writing tools to assist with translation, stylistic refining, and synthesis of the master's dissertation text. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the published article.
+
+\section*{Acknowledgements}
+The authors would like to acknowledge the Instituto de Ci\^encias Matem\'aticas e de Computa\c{c}\~ao (ICMC-USP) and the Professional Master's Program in Mathematics, Statistics, and Computing Applied to Industry (MECAI) for academic support.
+
+%% Referências Bibliográficas
+\bibliographystyle{elsarticle-harv}
+\bibliography{references}
+
+\end{document}

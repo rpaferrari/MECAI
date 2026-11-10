@@ -1,0 +1,176 @@
+\documentclass[preprint,12pt,authoryear]{elsarticle}
+
+%% Pacotes essenciais
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{lipsum}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\journal{Journal of Cleaner Production (Versão de Revisão em Português)}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Título do Artigo em Português
+\title{Otimização de uma Cadeia de Suprimentos em Circuito Fechado para Terminais de Pagamento Eletrônico: Uma Abordagem por Programação Linear Inteira Mista sob Acordos Rígidos de Nível de Serviço (SLA)}
+
+%% Autores e Filiações
+\author[icmc]{Rafael P. A. Ferrari\corref{cor1}}
+\ead{rpaferrari@usp.br}
+
+\author[icmc]{Maristela O. Santos}
+\ead{mari@icmc.usp.br}
+
+\author[ufscar]{Eli Angela V. Toso}
+\ead{eli@dep.ufscar.br}
+
+\cortext[cor1]{Autor correspondente}
+\affiliation[icmc]{organization={Instituto de Ciências Matemáticas e de Computação, Universidade de São Paulo (ICMC-USP)},
+            addressline={Av. Trabalhador São-carlense, 400}, 
+            city={São Carlos},
+            state={SP},
+            postcode={13566-590},
+            country={Brasil}}
+
+\affiliation[ufscar]{organization={Departamento de Engenharia de Produção, Universidade Federal de São Carlos (DEP-UFSCar)},
+            addressline={Rodovia Washington Luís, km 235}, 
+            city={São Carlos},
+            state={SP},
+            postcode={13565-905},
+            country={Brasil}}
+
+%% Resumo
+\begin{abstract}
+O crescimento expressivo das transações eletrônicas impulsionou a expansão em larga escala de terminais de ponto de venda (POS, as populares maquininhas) em diversos segmentos do varejo. Nesse cenário competitivo, as empresas credenciadoras de adquirência estão sujeitas a rigorosos Acordos de Nível de Serviço (SLA), que determinam o reparo ou substituição de equipamentos com defeito em até 24 horas para evitar penalidades e interrupção na captura de receitas. Como consequência, a gestão do fim de uso e do fluxo reverso desses dispositivos eletrônicos impõe severos desafios operacionais e ambientais. Este artigo propõe um modelo de Programação Linear Inteira Mista (PLIM) para otimizar uma Cadeia de Suprimentos em Circuito Fechado (CLSC) multiescalão, direcionada a redes de adquirência sob princípios de economia circular. A malha integra fabricantes de terminais, Centros de Distribuição (CDs), Postos Avançados (PAs) descentralizados, Zonas de Demanda (ZDs) e unidades certificadas de descarte ecológico. A função objetivo minimiza os custos operacionais totais — incluindo instalação e manutenção de facilidades, transporte direto e reverso multiescalão e custos de estocagem —, respeitando restrições rígidas de capacidade e a exigência de atendimento imediato de SLA. O modelo foi validado utilizando instâncias empíricas do estado de São Paulo, Brasil, e resolvido via solver Gurobi. Os resultados computacionais comprovam que a localização estratégica de postos avançados descentralizados reduz expressivamente o tempo de resposta logístico, ao mesmo tempo em que viabiliza altas taxas de remanufatura e recuperação de terminais, mitigando a geração de resíduos eletroeletrônicos (REEE/e-waste) e evitando o descarte precoce em aterros.
+\end{abstract}
+
+%% Destaques (Highlights - 3 a 5 pontos)
+\begin{highlights}
+\item Modelo de cadeia de suprimentos em circuito fechado para terminais POS sob SLA rígido
+\item Formulado como Programação Linear Inteira Mista (PLIM) multiescalão
+\item Captura logística reversa, ciclos de remanufatura e descarte ecológico certificado
+\item Estudo de caso empírico baseado em dados reais do estado de São Paulo, Brasil
+\item Equilibra eficiência de custo logístico com economia circular e recuperação de recursos
+\end{highlights}
+
+%% Palavras-chave
+\begin{keyword}
+Cadeia de Suprimentos de Circuito Fechado \sep Logística Reversa \sep Localização de Facilidades \sep Programação Linear Inteira Mista \sep Lixo Eletrônico (REEE) \sep Economia Circular
+\end{keyword}
+
+\end{frontmatter}
+
+%% ==============================================================================
+%% SEÇÃO 1: INTRODUÇÃO
+%% ==============================================================================
+\section{Introdução}
+\label{sec:intro}
+
+Os problemas de localização de facilidades (\emph{Facility Location Problem} -- FLP) constituem decisões de planejamento de alta relevância estratégica para organizações contemporâneas. Um dimensionamento adequado da malha logística possibilita um atendimento ágil e com menores custos operacionais, gerando vantagem competitiva sustentável, haja vista que as despesas logísticas com transporte e armazenagem costumam representar parcelas substanciais do orçamento corporativo global \citep{Owen1998Strategic}. Conforme destacam \citet{oliveira2012sistema}, os problemas de localização tratam fundamentalmente da alocação ótima dos recursos de uma organização no espaço geográfico, de modo a atender, da melhor forma possível, aos critérios pré-estabelecidos referentes aos pontos de demanda, os quais englobam restrições operacionais, geográficas, orçamentárias e temporais.
+
+A complexidade dessas redes logísticas varia consideravelmente. Enquanto certas configurações operam em esquemas simplificados com um único centro de distribuição central \citep{SINGH2018343}, cadeias mais sofisticadas integram múltiplos escalões compostos por fabricantes, armazéns centrais e estações locais de atendimento. Ademais, tais redes podem se estruturar como circuitos abertos (onde o produto transita unidirecionalmente do fornecedor ao consumidor final) ou como Cadeias de Suprimentos em Circuito Fechado (\emph{Closed-Loop Supply Chains} -- CLSC), nas quais fluxos diretos e reversos coexistem, viabilizando o retorno de produtos usados para remanufatura, reutilização ou descarte controlado \citep{AMIN2017316}.
+
+No contexto da transição global para a economia digital, o setor de pagamentos eletrônicos vivenciou uma expansão sem precedentes. No Brasil, o número de transações eletrônicas passou de 3,83 milhões em 2011 para 9,67 milhões em 2020, acompanhado pelo crescimento no total de cartões de crédito ativos, que saltou de 78,4 milhões para 133,7 milhões no mesmo intervalo \citep{TNS}. Segundo dados da Associação Brasileira das Empresas de Cartões de Crédito e Serviços (Abecs), as transações capturadas via cartões de crédito, débito e pré-pago superaram a marca de R\$ 2 trilhões em 2020, equivalendo a aproximadamente 27\% do Produto Interno Bruto (PIB) nacional \citep{Valenti1998}. A sustentação desse mercado depende diretamente de um vasto parque de terminais eletrônicos móveis de ponto de venda (\emph{Point of Sale} -- POS), popularmente conhecidos como maquininhas de cartão, distribuídos por milhões de estabelecimentos comerciais, desde microempreendedores individuais até grandes redes varejistas.
+
+Entretanto, a gestão logística dessas credenciadoras opera sob condições singulares de extrema criticidade. A continuidade das transações financeiras nos pontos de venda é regida por rigorosos Acordos de Nível de Serviço (\emph{Service Level Agreements} -- SLAs). No mercado adquirente, falhas operacionais, defeitos em baterias, quebras de leitoras ou travamentos em componentes de conectividade (como placas internas e \emph{SIM cards}) exigem a substituição ou o reparo imediato do terminal POS, tipicamente em prazos não superiores a 24 horas \citep{Silva2021Adquirencia}. O não cumprimento desse SLA acarreta penalidades contratuais severas, atrito com o lojista e a interrupção imediata na captura de transações, resultando em perda direta de faturamento. Portanto, as empresas adquirentes não podem depender unicamente de entregas centralizadas distantes, necessitando de uma rede capilarizada com Postos Avançados (PAs) descentralizados mantidos próximos às Zonas de Demanda (ZDs).
+
+Paralelamente à demanda por agilidade, emerge uma urgência ambiental crítica ligada à geração de Resíduos de Equipamentos Eletroeletrônicos (REEE). O avanço contínuo do consumo eletrônico gerou recordes de comercialização de equipamentos nos últimos anos \citep{Santos2014a}. O descarte inadequado ou prematuro desses aparelhos acarreta impactos socioambientais graves devido à presença de metais pesados, polímeros sintéticos e componentes tóxicos. Em países em desenvolvimento, como o Brasil, a implementação efetiva da Logística Reversa (LR) para resíduos eletrônicos ainda enfrenta barreiras estruturais significativas em comparação às economias desenvolvidas \citep{demajorovic2016logistica}. A LR desempenha um papel fulcral na viabilização da Economia Circular \citep{guarnieri2011logistica}, garantindo que o terminal POS devolvido ou avariado seja reintegrado ao ciclo de valor via remanufatura em centros especializados ou, em caso de desgaste irreversível, direcionado a unidades de reciclagem com certificação ambiental ISO 14001 \citep{mogalelogirever}.
+
+Embora a literatura em Pesquisa Operacional e Engenharia de Produção apresente modelos de localização para CLSC \citep{SINGH2018343,AMIN2017316}, observa-se uma importante lacuna na integração conjunta de: (i) redes multiescalão com estoque descentralizado em PAs para atendimento de SLAs estritos de 24 horas; (ii) fluxos reversos contínuos de remanufatura de terminais de pagamento que retornam à condição de novo; e (iii) custos operacionais empíricos avaliados sob a complexidade geográfica de mercados emergentes de grande escala.
+
+Para preencher essa lacuna, este artigo apresenta um modelo matemático de Programação Linear Inteira Mista (PLIM) formulado para otimizar a configuração e a operação de uma cadeia de suprimentos em circuito fechado no setor adquirente em um horizonte anual de planejamento. O modelo determina, de forma integrada:
+\begin{enumerate}[(i)]
+    \item A quantidade e a localização geográfica ótima de facilidades estratégicas (Centros de Distribuição -- CDs e Postos Avançados -- PAs);
+    \item As políticas de transporte e movimentação de terminais novos, remanufaturados e inservíveis entre todos os elos da rede (Fabricantes, CDs, PAs, Zonas de Demanda e Unidades de Descarte);
+    \item O balanceamento dinâmico entre o atendimento de demandas sob SLA restrito e a destinação ecologicamente responsável dos resíduos eletrônicos gerados.
+\end{enumerate}
+
+O modelo proposto foi implementado computacionalmente e resolvido por meio do \emph{solver} Gurobi, utilizando instâncias empíricas derivadas do estado de São Paulo, o maior polo financeiro e comercial da América Latina.
+
+O restante deste artigo está organizado da seguinte forma: a Seção \ref{sec:lit_review} apresenta uma síntese da literatura sobre cadeias em circuito fechado, logística reversa de REEE e problemas de localização. A Seção \ref{sec:problem_formulation} detalha o sistema logístico, as premissas operacionais e a formulação matemática completa em PLIM. A Seção \ref{sec:computational_study} descreve o estudo de caso empírico de São Paulo, as instâncias analisadas e os resultados computacionais obtidos. A Seção \ref{sec:discussion} discute as implicações gerenciais e os benefícios socioambientais na mitigação de resíduos. Por fim, a Seção \ref{sec:conclusions} sintetiza as principais conclusões e sugere direcionamentos para pesquisas futuras.
+
+%% ==============================================================================
+%% SEÇÃO 2: REVISÃO DA LITERATURA (~1.400 palavras)
+%% ==============================================================================
+\section{Revisão da Literatura}
+\label{sec:lit_review}
+\subsection{Cadeias de Suprimentos em Circuito Fechado e Gestão de Resíduos Eletrônicos (REEE)}
+\lipsum[19-28]
+
+\subsection{Localização de Facilidades e Logística Reversa sob SLAs}
+\lipsum[29-38]
+
+%% ==============================================================================
+%% SEÇÃO 3: DESCRIÇÃO DO PROBLEMA E FORMULAÇÃO MATEMÁTICA (~1.900 palavras)
+%% ==============================================================================
+\section{Descrição do Problema e Formulação Matemática}
+\label{sec:problem_formulation}
+\subsection{Descrição do Sistema e Hipóteses do Modelo}
+\lipsum[39-48]
+
+\subsection{Formulação Matemática em PLIM}
+\lipsum[49-58]
+
+\begin{equation}
+\min Z = \sum_{i \in I} f_i Y_i + \sum_{i \in I} \sum_{j \in J} c_{ij} X_{ij} + \sum_{j \in J} \sum_{k \in K} d_{jk} W_{jk}
+\label{eq:objective_sample_pt}
+\end{equation}
+
+\lipsum[59-65]
+
+%% ==============================================================================
+%% SEÇÃO 4: ESTUDO DE CASO E RESULTADOS COMPUTACIONAIS (~1.900 palavras)
+%% ==============================================================================
+\section{Estudo Computacional e Aplicação Empírica}
+\label{sec:computational_study}
+\subsection{Estudo de Caso: Rede de Adquirência no Estado de São Paulo}
+\lipsum[66-78]
+
+\subsection{Desempenho Computacional e Análise de Gap}
+\lipsum[79-92]
+
+%% ==============================================================================
+%% SEÇÃO 5: DISCUSSÃO E IMPLICAÇÕES GERENCIAIS E AMBIENTAIS (~1.050 palavras)
+%% ==============================================================================
+\section{Discussão e Implicações Gerenciais e Ambientais}
+\label{sec:discussion}
+\subsection{Economia Circular e Mitigação de Resíduos Eletrônicos}
+\lipsum[93-99]
+
+\subsection{Diretrizes Estratégicas para Credenciadoras e Fintechs}
+\lipsum[100-107]
+
+%% ==============================================================================
+%% SEÇÃO 6: CONCLUSÕES (~500 palavras)
+%% ==============================================================================
+\section{Conclusões e Trabalhos Futuros}
+\label{sec:conclusions}
+\lipsum[108-115]
+
+
+%% ==============================================================================
+%% DECLARAÇÕES
+%% ==============================================================================
+\section*{Contribuição dos Autores (CRediT Statement)}
+\textbf{Rafael P. A. Ferrari:} Conceitualização, Metodologia, Software, Análise formal, Investigação, Curadoria de dados, Escrita do rascunho original, Visualização.
+\textbf{Maristela O. Santos:} Conceitualização, Supervisão, Escrita - Revisão e Edição, Administração do projeto.
+\textbf{Eli Angela V. Toso:} Conceitualização, Supervisão, Metodologia, Escrita - Revisão e Edição.
+
+\section*{Declaração de Conflito de Interesses}
+Os autores declaram que não possuem interesses financeiros conflitantes nem relações pessoais conhecidas que possam ter influenciado o trabalho relatado neste artigo.
+
+\section*{Agradecimentos}
+Os autores agradecem ao Instituto de Ciências Matemáticas e de Computação (ICMC-USP) e ao Programa de Mestrado Profissional em Matemática, Estatística e Computação Aplicadas à Indústria (MECAI) pelo apoio acadêmico.
+
+%% Referências Bibliográficas
+\bibliographystyle{elsarticle-harv}
+\bibliography{references}
+
+\end{document}
